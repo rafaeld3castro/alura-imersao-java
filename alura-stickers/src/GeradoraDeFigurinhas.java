@@ -15,7 +15,7 @@ import javax.imageio.ImageIO;
 
 public class GeradoraDeFigurinhas {
 
-    public void cria(InputStream inputStream, String nomeArquivo) throws Exception {
+    public void cria(InputStream inputStream, String nomeArquivo, String avaliacao) throws Exception {
 
         // leitura de imagem
         // InputStream inputStream = new
@@ -25,11 +25,7 @@ public class GeradoraDeFigurinhas {
         // cria nova imagem em memória com transparência e com tamanho novo
         int largura = imagemOriginal.getWidth();
         int altura = imagemOriginal.getHeight();
-
-        int novaAltura = altura + 200;
-        double percent = 0.2;
-        novaAltura = altura + (int) (altura * percent);
-
+        int novaAltura = altura + (int) (altura * 0.2);
         BufferedImage novaImagem = new BufferedImage(largura, novaAltura, BufferedImage.TRANSLUCENT);
 
         // copiar a imagem original pra novo imagem (em memória)
@@ -37,16 +33,29 @@ public class GeradoraDeFigurinhas {
         graphics.drawImage(imagemOriginal, 0, 0, null);
 
         // configurar a fonte
-        configurarFonte(graphics, "TOPZERA", altura, largura, novaAltura - altura);
+        String texto = "TOPZERA " + avaliacao + "/10";
+        configurarFonte(graphics, texto, altura, largura, novaAltura - altura);
 
         // escrever a nova imagem em um arquivo
         ImageIO.write(novaImagem, "png", new File("saida/" + nomeArquivo));
     }
 
+    /**
+     * Faz as configurações da fonte do texto
+     * @param g
+     * @param texto
+     * @param textIni
+     * @param largura
+     * @param altura
+     */
     private void configurarFonte(Graphics2D g, String texto, int textIni, int largura, int altura) {
-        var corFonte = new Color(248, 252, 0);
-        int fontSize = (int) (largura * 0.2);
-        Font fonte = new Font("Impact", Font.BOLD, fontSize);
+        
+        // configurações da fonte
+        int fontSize = (int) (largura * 0.15);
+        Font fonte = new Font("Impact", Font.PLAIN, fontSize);
+        var corFonte = new Color(111, 1, 133);
+        
+        // definições para centralizar o texto
         FontMetrics metrics = g.getFontMetrics(fonte);
         int xFont = 0 + (largura - metrics.stringWidth(texto)) / 2;
         int yFont = textIni + ((altura - metrics.getHeight()) / 2) + metrics.getAscent();
@@ -57,7 +66,8 @@ public class GeradoraDeFigurinhas {
         // escrever uma frase na nova imagem
         g.drawString(texto, xFont, yFont);
 
-        FontRenderContext frc = g.getFontRenderContext();
+        // Não ficou legal o outline do texto =(
+        /*FontRenderContext frc = g.getFontRenderContext();
         GlyphVector gv = fonte.createGlyphVector(frc, texto);
         Shape shape = gv.getOutline(xFont + 0.5f, yFont + 0.5f);
         g.setClip(shape);
@@ -69,6 +79,6 @@ public class GeradoraDeFigurinhas {
                 RenderingHints.VALUE_RENDER_QUALITY);
         g.draw(shape);
 
-        g.dispose();
+        g.dispose();*/
     }
 }

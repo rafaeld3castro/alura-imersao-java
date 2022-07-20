@@ -23,13 +23,14 @@ public class App {
 
         // exibir e manipular os dados
         GeradoraDeFigurinhas geradora = new GeradoraDeFigurinhas();
-        
         for (Map<String, String> filme : listaDeFilmes) {
             String titulo = filme.get("title");
-            System.out.println(titulo);
             InputStream inputStream = new URL(filme.get("image")).openStream();
-            geradora.cria(inputStream, titulo + ".png");
-            System.out.println();
+            String nomeArquivo = titulo.replace(": ", " - ")  + ".png";
+            String avaliacao = filme.get("imDbRating");
+            geradora.cria(inputStream, nomeArquivo, avaliacao);
+
+            System.out.println(titulo);
         }
     }
 }
