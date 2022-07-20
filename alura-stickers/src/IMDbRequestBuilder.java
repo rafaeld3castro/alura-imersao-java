@@ -15,18 +15,18 @@ public class IMDbRequestBuilder {
     }
 
     public IMDbRequestBuilder forTop250Movies() {
-        this.url = "https://imdb-api.com/en/API/Top250Movies";
+        // this.url = "https://imdb-api.com/en/API/Top250Movies + "/" + this.apiKey";
+        this.url = "https://raw.githubusercontent.com/alura-cursos/imersao-java/api/TopMovies.json";
         return this;
     }
 
     public IMDbRequestBuilder forMostPopularMovies() {
-        this.url = "https://imdb-api.com/en/API/MostPopularMovies";
+        this.url = "https://imdb-api.com/en/API/MostPopularMovies" + "/" + this.apiKey;
         return this;
     }
 
     public HttpRequest build() {
-        String fullUrl = this.url + "/" + this.apiKey;
-        URI endereco = URI.create(fullUrl);
+        URI endereco = URI.create(url);
         return HttpRequest.newBuilder(endereco).GET().build();
     }
 }
