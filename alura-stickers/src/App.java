@@ -1,44 +1,36 @@
 import java.io.InputStream;
 import java.net.URL;
-import java.net.http.HttpClient;
-import java.net.http.HttpResponse;
-import java.net.http.HttpResponse.BodyHandlers;
 import java.util.List;
-import java.util.Map;
 
 public class App {
 
     public static void main(String[] args) throws Exception {
 
-        String apiKey = System.getenv("API_KEY");
+        // String apiKey = System.getenv("API_KEY");
 
-        // fazer uma conexão HTTP e buscar os top 250 filmes
-        var request = IMDbRequestBuilder.newBuilder(apiKey).forTop250Movies().build();
-        HttpResponse<String> response = HttpClient.newHttpClient().send(request, BodyHandlers.ofString());
-        String body = response.body();
+        ExtratorEnum extratorEnum = ExtratorEnum.NASA;
+        String url = extratorEnum.getUrl();
+        ExtratorDeConteudo extrator = extratorEnum.getExtrator();
 
-        // pegar só os dados que interessam (titulo, poster, classificação)
-        JsonParser parser = new JacksonJsonParser();
-        List<Map<String, String>> listaDeFilmes = parser.parse(body);
+        String json = new ClientHttp().buscadados(url);
 
         // exibir e manipular os dados
+        List<Conteudo> conteudos = extrator.extrairConteudos(json);
+
         GeradoraDeFigurinhas geradora = new GeradoraDeFigurinhas();
-        for (int i = 0; i < 5; i++) {
-            Map<String, String> filme = listaDeFilmes.get(i);
 
-            String urlImage = filme.get("image")
-                .replaceAll("(@+)(.*).jpg$", "$1.jpg");
+        for (int i = 0; i < 3; i++) {
+            Conteudo conteudo = conteudos.get(i);
 
-            String titulo = filme.get("title");
+            InputStream inputStream = new URL(conteudo.getUrlImagem())
+                    .openStream();
+            String nomeArquivo = "saida/" + conteudo.getTitulo()
+                    .replace(": ", " - ") + ".png";
+            String texto = "TOPZERA 10/10";
             
-            String avaliacao = filme.get("imDbRating");
-
-            InputStream inputStream = new URL(urlImage).openStream();
-            String nomeArquivo = "saida/" + titulo.replace(": ", " - ")  + ".png";
-            String texto = "TOPZERA " + avaliacao + "/10";
             geradora.cria(inputStream, nomeArquivo, texto);
 
-            System.out.println(titulo);
+            System.out.println(conteudo.getTitulo());
         }
     }
 }

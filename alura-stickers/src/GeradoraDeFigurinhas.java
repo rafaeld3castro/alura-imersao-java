@@ -13,22 +13,20 @@ public class GeradoraDeFigurinhas {
     public void cria(InputStream inputStream, String nomeArquivo, String texto) throws Exception {
 
         // leitura de imagem
-        // InputStream inputStream = new
-        // URL("https://imersao-java-apis.s3.amazonaws.com/TopMovies_1.jpg").openStream();
         BufferedImage imagemOriginal = ImageIO.read(inputStream);
 
         // cria nova imagem em memória com transparência e com tamanho novo
         int largura = imagemOriginal.getWidth();
         int altura = imagemOriginal.getHeight();
-        int novaAltura = altura + (int) (altura * 0.2);
+        int novaAltura = altura + (int) (altura * 0.3);
         BufferedImage novaImagem = new BufferedImage(largura, novaAltura, BufferedImage.TRANSLUCENT);
 
         // copiar a imagem original pra novo imagem (em memória)
         Graphics2D graphics = (Graphics2D) novaImagem.getGraphics();
         graphics.drawImage(imagemOriginal, 0, 0, null);
 
-        // configurar a fonte
-        configurarFonte(graphics, texto, altura, largura, novaAltura - altura);
+        // configurar texto do sticker
+        configurarTexto(graphics, texto, altura, largura, novaAltura - altura);
 
         // escrever a nova imagem em um arquivo
         ImageIO.write(novaImagem, "png", new File(nomeArquivo));
@@ -42,7 +40,7 @@ public class GeradoraDeFigurinhas {
      * @param largura
      * @param altura
      */
-    private void configurarFonte(Graphics2D g, String texto, int yTextIni, int largura, int altura) {
+    private void configurarTexto(Graphics2D g, String texto, int yTextIni, int largura, int altura) {
         
         // configurações da fonte
         int fontSize = (int) (largura * 0.15);
