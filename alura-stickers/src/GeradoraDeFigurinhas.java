@@ -1,12 +1,7 @@
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.Shape;
-import java.awt.font.FontRenderContext;
-import java.awt.font.GlyphVector;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.InputStream;
@@ -15,7 +10,7 @@ import javax.imageio.ImageIO;
 
 public class GeradoraDeFigurinhas {
 
-    public void cria(InputStream inputStream, String nomeArquivo, String avaliacao) throws Exception {
+    public void cria(InputStream inputStream, String nomeArquivo, String texto) throws Exception {
 
         // leitura de imagem
         // InputStream inputStream = new
@@ -33,11 +28,10 @@ public class GeradoraDeFigurinhas {
         graphics.drawImage(imagemOriginal, 0, 0, null);
 
         // configurar a fonte
-        String texto = "TOPZERA " + avaliacao + "/10";
         configurarFonte(graphics, texto, altura, largura, novaAltura - altura);
 
         // escrever a nova imagem em um arquivo
-        ImageIO.write(novaImagem, "png", new File("saida/" + nomeArquivo));
+        ImageIO.write(novaImagem, "png", new File(nomeArquivo));
     }
 
     /**
@@ -48,7 +42,7 @@ public class GeradoraDeFigurinhas {
      * @param largura
      * @param altura
      */
-    private void configurarFonte(Graphics2D g, String texto, int textIni, int largura, int altura) {
+    private void configurarFonte(Graphics2D g, String texto, int yTextIni, int largura, int altura) {
         
         // configurações da fonte
         int fontSize = (int) (largura * 0.15);
@@ -58,27 +52,12 @@ public class GeradoraDeFigurinhas {
         // definições para centralizar o texto
         FontMetrics metrics = g.getFontMetrics(fonte);
         int xFont = 0 + (largura - metrics.stringWidth(texto)) / 2;
-        int yFont = textIni + ((altura - metrics.getHeight()) / 2) + metrics.getAscent();
+        int yFont = yTextIni + ((altura - metrics.getHeight()) / 2) + metrics.getAscent();
         
         g.setFont(fonte);
         g.setColor(corFonte);
 
         // escrever uma frase na nova imagem
         g.drawString(texto, xFont, yFont);
-
-        // Não ficou legal o outline do texto =(
-        /*FontRenderContext frc = g.getFontRenderContext();
-        GlyphVector gv = fonte.createGlyphVector(frc, texto);
-        Shape shape = gv.getOutline(xFont + 0.5f, yFont + 0.5f);
-        g.setClip(shape);
-        g.setStroke(new BasicStroke(fontSize * 0.05f));
-        g.setColor(Color.BLACK);
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
-        g.setRenderingHint(RenderingHints.KEY_RENDERING,
-                RenderingHints.VALUE_RENDER_QUALITY);
-        g.draw(shape);
-
-        g.dispose();*/
     }
 }
