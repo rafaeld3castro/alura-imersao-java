@@ -7,7 +7,7 @@ import java.net.http.HttpResponse.BodyHandlers;
 
 public class ClientHttp {
 
-    public String buscadados(String url) {
+    public String buscarDados(String url) {
 
         try {
             URI endereco = URI.create(url);

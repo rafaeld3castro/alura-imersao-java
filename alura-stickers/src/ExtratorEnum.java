@@ -1,7 +1,11 @@
 public enum ExtratorEnum {
-    
-    IMDB("https://raw.githubusercontent.com/alura-cursos/imersao-java/api/TopMovies.json", new ExtratorDeConteudoDoIMDb()),
-    NASA("https://raw.githubusercontent.com/alura-cursos/imersao-java/api/NASA-APOD.json", new ExtratorDeConteudoDaNasa());
+
+    IMDB("https://raw.githubusercontent.com/alura-cursos/imersao-java/api/TopMovies.json",
+            new ExtratorDeConteudoDoIMDb()),
+    NASA("https://raw.githubusercontent.com/alura-cursos/imersao-java/api/NASA-APOD.json",
+            new ExtratorDeConteudoDaNasa()),
+    LINGUAGENS("http://localhost:8080/linguagens",
+            new ExtratorDeConteudoLinguagens());
 
     private final String url;
     private final ExtratorDeConteudo extrator;
@@ -11,11 +15,11 @@ public enum ExtratorEnum {
         this.extrator = extrator;
     }
 
-    public String getUrl() {
+    public String url() {
         return url;
     }
 
-    public ExtratorDeConteudo getExtrator() {
+    public ExtratorDeConteudo extrator() {
         return extrator;
     }
 }

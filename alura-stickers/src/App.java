@@ -1,5 +1,8 @@
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 public class App {
@@ -8,17 +11,17 @@ public class App {
 
         // String apiKey = System.getenv("API_KEY");
 
-        ExtratorEnum extratorEnum = ExtratorEnum.NASA;
-        String url = extratorEnum.getUrl();
-        ExtratorDeConteudo extrator = extratorEnum.getExtrator();
+        ExtratorEnum extratorEnum = ExtratorEnum.LINGUAGENS;
 
-        String json = new ClientHttp().buscadados(url);
-
+        String json = new ClientHttp().buscarDados(extratorEnum.url());
+        
         // exibir e manipular os dados
-        List<Conteudo> conteudos = extrator.extrairConteudos(json);
+        List<Conteudo> conteudos = extratorEnum.extrator().extrairConteudos(json);
 
         GeradoraDeFigurinhas geradora = new GeradoraDeFigurinhas();
 
+        Path saida = Paths.get("saida");
+        Files.createDirectories(saida);
         for (int i = 0; i < 3; i++) {
             Conteudo conteudo = conteudos.get(i);
 
